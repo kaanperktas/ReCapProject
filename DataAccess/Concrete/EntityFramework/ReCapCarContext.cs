@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concrete.Entity_Framework
+namespace DataAccess.Concrete.EntityFramework
 {
     public class ReCapCarContext : DbContext
     {
