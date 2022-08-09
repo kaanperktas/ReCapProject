@@ -18,10 +18,10 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (ReCapCarContext context = new ReCapCarContext())
             {
-                var result = from c in context.Cars
-                             join clr in context.Colors
+                var result = from c in context.Car
+                             join clr in context.Color
                              on c.ColorId equals clr.ColorId
-                             join b in context.Brands
+                             join b in context.Brand
                              on c.BrandId equals b.BrandId
                              select new CarDetailDto
                              {

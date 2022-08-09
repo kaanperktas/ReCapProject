@@ -14,10 +14,5 @@ namespace Entities.DTOs
         public string ColorName { get; set; }
         public int DailyPrice { get; set; }
 
-
-
-
-
-
     }
 }
