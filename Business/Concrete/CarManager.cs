@@ -27,13 +27,13 @@ namespace Business.Abstract
                 _carDal.Add(car);
                 return new SuccessResult(Messages.CarAdded);
             }
-            return new ErrorResult(Messages.InvalidCarName);
+            return new ErrorResult(Messages.InsufficientCharacterError);
         }
 
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarDeleted);
         }
 
         public IDataResult<List<Car>> GetAll()

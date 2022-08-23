@@ -22,21 +22,39 @@ namespace Business.Concrete
 
         public IResult Add(Rental rental)
         {
-            if (CheckIfCarDelivered(rental.CarId))
+            var result = _rentalDal.GetAll(x => x.CarId == rental.CarId).OrderByDescending(r => r.Id).FirstOrDefault();
+            //var kayit = result.FirstOrDefault(r => r. == rental.Id);
+            if (result != null && result.ReturnDate == null)
             {
-                rental.RentDate = DateTime.Now;
-                _rentalDal.Add(rental);
-                return new SuccessResult("Araba kiralandı : " + rental.CarId);
+                return new ErrorResult(Messages.CarNotDelivered);
             }
-
-            return new ErrorResult("Araba zaten kiralandı!");
+            else
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.RentalAdded);
+            }
 
         }
 
         public IResult Delete(Rental rental)
         {
-            _rentalDal.Delete(rental);
-            return new SuccessResult();
+            try
+            {
+                Rental result = _rentalDal.Get(x => x == rental);
+                if (result != null)
+                {
+                    _rentalDal.Delete(rental);
+                    return new SuccessResult(Messages.RentalDeleted);
+                }
+                else
+                {
+                    return new ErrorResult(Messages.RentalIdNull);
+                }
+            }
+            catch (Exception)
+            {
+                return new ErrorResult(Messages.RentalDeletedError);
+            }
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -52,18 +70,13 @@ namespace Business.Concrete
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
-            return new SuccessResult();
+            return new SuccessResult(Messages.RentalUpdated);
         }
-        private bool CheckIfCarDelivered(int carId)
+        
+        public IDataResult<Rental> GetByReturnDateNull(int carId)
         {
-            var carToCheck = _rentalDal.Get(r => r.CarId == carId);
-
-            if (carToCheck != null)
-            {
-                return !(carToCheck.ReturnDate == new DateTime(0001, 1, 01, 00, 00, 00));
-            }
-
-            return true;
+            var result = _rentalDal.GetAll().FirstOrDefault(x => x.CarId == carId && x.ReturnDate == null);
+            return new SuccessDataResult<Rental>(result);
         }
     }
 }
